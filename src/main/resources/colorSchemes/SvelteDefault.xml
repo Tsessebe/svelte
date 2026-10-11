@@ -1,0 +1,23 @@
+<list>
+  <!-- Blazor/Razor-style: component tags green, component attributes (props) lilac -->
+  <option name="SVELTE_COMPONENT">
+    <value>
+      <option name="FOREGROUND" value="0B7A4B"/>
+    </value>
+  </option>
+  <option name="SVELTE_COMPONENT_ATTRIBUTE">
+    <value>
+      <option name="FOREGROUND" value="7A3E9D"/>
+    </value>
+  </option>
+  <option name="SVELTE_ELEMENT">
+    <value>
+      <option name="FOREGROUND" value="C4501C"/>
+    </value>
+  </option>
+  <option name="SVELTE_USED_IMPORT">
+    <value>
+      <option name="FOREGROUND" value="1750EB"/>
+    </value>
+  </option>
+</list>

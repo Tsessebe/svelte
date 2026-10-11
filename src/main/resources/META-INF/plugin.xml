@@ -1,0 +1,92 @@
+<idea-plugin>
+  <id>io.github.tsessebe.svelte</id>
+  <name>Svelte 5 Toolkit</name>
+  <vendor email="francois@recotrust.co.za" url="https://github.com/Tsessebe">Francois de Wet</vendor>
+  <description><![CDATA[
+    <p>Svelte 5 (runes) and Svelte 4 support for WebStorm and IntelliJ IDEA Ultimate.</p>
+    <ul>
+      <li><b>Highlighting</b> for <code>.svelte</code> files: blocks, directives, components and
+          <code>&lt;svelte:*&gt;</code> elements in their own colours, TypeScript inside <code>{...}</code>,
+          and <code>&lt;script lang="ts"&gt;</code> / <code>&lt;style lang="scss"&gt;</code>.</li>
+      <li><b>Editing</b>: folding and auto-closing for <code>{#if}</code>, <code>{#each}</code>,
+          <code>{#await}</code>, <code>{#key}</code> and <code>{#snippet}</code>.</li>
+      <li><b>Language server</b>: type checking, completion and diagnostics from
+          <code>svelte-language-server</code>, plus <code>typescript-svelte-plugin</code> so
+          <code>.ts</code> files understand Svelte imports.</li>
+      <li><b>Navigation</b>: go to declaration, find usages and rename between the template and
+          <code>&lt;script&gt;</code>.</li>
+      <li><b>SvelteKit</b>: route-aware tab titles, file icons and nesting for <code>+page</code>,
+          <code>+layout</code>, <code>+error</code> and <code>+server</code> files, and related-file navigation.</li>
+      <li><b>Learning aids</b>: hover documentation for runes, blocks and directives with links to svelte.dev,
+          and hints for Svelte 4 syntax with quick fixes to migrate.</li>
+    </ul>
+    <p>Requires Node.js. If the project has no <code>svelte-language-server</code> in
+       <code>node_modules</code>, the plugin downloads it from npm on first use.
+       The plugin collects no data.</p>
+    <p>Settings: <i>Languages &amp; Frameworks | TypeScript | Svelte</i>.</p>
+    <p>Free and open source. If it helps you,
+       <a href="https://www.buymeacoffee.com/Tsessebe">buy me a coffee</a>.</p>
+  ]]></description>
+
+  <incompatible-with>dev.blachut.svelte.lang</incompatible-with>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.xml</depends>
+  <depends>JavaScript</depends>
+  <depends>com.intellij.css</depends>
+  <depends>com.intellij.modules.lsp</depends>
+  <depends>com.intellij.modules.ultimate</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileType name="Svelte" extensions="svelte" language="SvelteHTML"
+              implementationClass="io.github.tsessebe.svelte.lang.SvelteFileType" fieldName="INSTANCE"/>
+    <lang.parserDefinition language="SvelteHTML" implementationClass="io.github.tsessebe.svelte.parser.SvelteParserDefinition"/>
+    <html.compatibleLanguage language="SvelteHTML"/>
+    <lang.syntaxHighlighterFactory language="SvelteHTML"
+                                   implementationClass="io.github.tsessebe.svelte.highlighting.SvelteSyntaxHighlighterFactory"/>
+    <html.embeddedContentSupport implementation="io.github.tsessebe.svelte.highlighting.SvelteEmbeddedContentSupport"/>
+    <additionalTextAttributes scheme="Darcula" file="colorSchemes/SvelteDarcula.xml"/>
+    <additionalTextAttributes scheme="Default" file="colorSchemes/SvelteDefault.xml"/>
+    <colorSettings implementation="io.github.tsessebe.svelte.highlighting.SvelteColorSettingsPage"/>
+    <lang.inspectionSuppressor language="SvelteHTML" implementationClass="io.github.tsessebe.svelte.inspections.SvelteInspectionSuppressor"/>
+    <!-- embedded <script> PSI has JS/TS language; the suppressor only acts inside .svelte files -->
+    <lang.inspectionSuppressor language="TypeScript" implementationClass="io.github.tsessebe.svelte.inspections.SvelteInspectionSuppressor"/>
+    <lang.inspectionSuppressor language="JavaScript" implementationClass="io.github.tsessebe.svelte.inspections.SvelteInspectionSuppressor"/>
+    <lang.inspectionSuppressor language="CSS" implementationClass="io.github.tsessebe.svelte.inspections.SvelteInspectionSuppressor"/>
+    <annotator language="TypeScript" implementationClass="io.github.tsessebe.svelte.highlighting.SvelteImportAnnotator"/>
+    <annotator language="JavaScript" implementationClass="io.github.tsessebe.svelte.highlighting.SvelteImportAnnotator"/>
+    <lang.documentationProvider language="SvelteHTML" order="first"
+                                implementationClass="io.github.tsessebe.svelte.docs.SvelteDocumentationProvider"/>
+    <localInspection language="SvelteHTML" shortName="SvelteLegacySyntax" displayName="Svelte 4 (legacy) syntax"
+                     groupName="Svelte" enabledByDefault="true" level="WEAK WARNING"
+                     implementationClass="io.github.tsessebe.svelte.inspections.SvelteLegacySyntaxInspection"/>
+    <!-- template → script references -->
+    <referencesSearch implementation="io.github.tsessebe.svelte.psi.SvelteTemplateReferencesSearcher"/>
+    <lang.elementManipulator forClass="io.github.tsessebe.svelte.psi.SvelteMustacheElement"
+                             implementationClass="io.github.tsessebe.svelte.psi.SvelteMustacheManipulator"/>
+    <!-- SvelteKit -->
+    <editorTabTitleProvider implementation="io.github.tsessebe.svelte.kit.SvelteKitTabTitleProvider"/>
+    <iconProvider implementation="io.github.tsessebe.svelte.kit.SvelteKitIconProvider" order="first"/>
+    <projectViewNestingRulesProvider implementation="io.github.tsessebe.svelte.kit.SvelteKitNestingRulesProvider"/>
+    <gotoRelatedProvider implementation="io.github.tsessebe.svelte.kit.SvelteKitGotoRelatedProvider"/>
+    <lang.foldingBuilder language="SvelteHTML" implementationClass="io.github.tsessebe.svelte.editor.SvelteFoldingBuilder"/>
+    <typedHandler implementation="io.github.tsessebe.svelte.editor.SvelteTypedHandler"/>
+    <platform.lsp.integrationProvider implementation="io.github.tsessebe.svelte.service.SvelteLspIntegrationProvider"/>
+    <notificationGroup id="Svelte" displayType="BALLOON"/>
+    <projectConfigurable parentId="settings.typescriptcompiler" id="settings.svelte" displayName="Svelte"
+                         instance="io.github.tsessebe.svelte.settings.SvelteConfigurable" nonDefaultProject="true"/>
+    <lang.commenter language="SvelteHTML" implementationClass="com.intellij.lang.xml.XmlCommenter"/>
+  </extensions>
+
+  <actions>
+    <action id="Svelte.RestartServer" class="io.github.tsessebe.svelte.service.RestartSvelteServerAction"
+            text="Restart Svelte Language Server" description="Restart svelte-language-server and the TypeScript service"
+            icon="AllIcons.Actions.Restart">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+
+  <extensions defaultExtensionNs="JavaScript">
+    <languageServiceProvider implementation="io.github.tsessebe.svelte.service.SvelteLanguageServiceProvider" order="first"/>
+  </extensions>
+</idea-plugin>
