@@ -24,8 +24,8 @@
        <code>node_modules</code>, the plugin downloads it from npm on first use.
        The plugin collects no data.</p>
     <p>Settings: <i>Languages &amp; Frameworks | TypeScript | Svelte</i>.</p>
-    <p>Free and open source. If it helps you,
-       <a href="https://www.buymeacoffee.com/Tsessebe">buy me a coffee</a>.</p>
+    <p>Free and open source (MIT): <a href="https://github.com/Tsessebe/svelte">github.com/Tsessebe/svelte</a>.
+       If it helps you, <a href="https://www.buymeacoffee.com/Tsessebe">buy me a coffee</a>.</p>
   ]]></description>
 
   <incompatible-with>dev.blachut.svelte.lang</incompatible-with>
